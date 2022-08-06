@@ -2,10 +2,14 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 def getTextUrls(mainUrl):
-    url = f'{mainUrl}/ru/grazgdanskaya-oborona-grob/'
-    res = requests.get(url)
-    body = bs(res.text, 'lxml')
-    return [mainUrl + elem['href'] for elem in body.find_all('table', class_='itemlist')[0].find_all('a')]
+    result = []
+    urls = [f'{mainUrl}/ru/grazgdanskaya-oborona-grob/']
+    for elem in [f'{mainUrl}/ru/grazgdanskaya-oborona-grob/index-p{i}.html' for i in range(1,6)]: urls.append(elem)
+    for url in urls:
+        res = requests.get(url)
+        body = bs(res.text, 'lxml')
+        for elem in [mainUrl + elem['href'] for elem in body.find_all('table', class_='itemlist')[0].find_all('a')]: result.append(elem)
+    return result
 
 def getTextFromUrl(urls):
     texts = []
